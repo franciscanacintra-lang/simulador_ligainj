@@ -1,0 +1,298 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+
+:root {
+    /* ICEA Official Color Palette */
+    --bg-color: #f4f4f4; /* Light Grey background typical of Decia/FAB portals */
+    --card-bg: #ffffff;
+    --primary-blue: #1565c0; /* ICEA/DECEA Header Blue (Material Blue 800) */
+    --secondary-blue: #0d47a1; /* Darker blue for borders/emphasis */
+    --accent-gold: #ffb300; /* Gold from the ICEA seal */
+    --text-primary: #1a237e; /* Deep Navy Blue for text */
+    --text-secondary: #455a64; /* Muted Slate for secondary info */
+    --success: #2e7d32;
+    --warning: #f57c00;
+    --danger: #d32f2f;
+    --glass-border: #cfd8dc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Outfit', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    background-image: 
+        linear-gradient(rgba(21, 101, 192, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(21, 101, 192, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 3px solid var(--primary-blue);
+    animation: fadeInDown 0.8s ease-out;
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--primary-blue);
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    margin-bottom: 0.5rem;
+}
+
+p.subtitle {
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.main-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-top: 4px solid var(--primary-blue);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary-blue);
+    text-transform: uppercase;
+    font-weight: 700;
+    border-left: 4px solid var(--accent-gold);
+    padding-left: 0.75rem;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    text-transform: uppercase;
+}
+
+input, select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: #ffffff;
+    border: 1px solid var(--glass-border);
+    border-radius: 0.25rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.1);
+}
+
+.btn {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 0.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-blue);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-blue);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(21, 101, 192, 0.2);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary-blue);
+    color: var(--primary-blue);
+    margin-top: 1rem;
+}
+
+.btn-outline:hover {
+    background: rgba(21, 101, 192, 0.05);
+}
+
+/* Process List */
+.process-list {
+    margin-top: 2rem;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.process-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: #ffffff;
+    border: 1px solid var(--glass-border);
+    border-left: 4px solid var(--primary-blue);
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.process-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.process-id { font-weight: 700; color: var(--primary-blue); }
+.process-sub { font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; }
+
+.remove-btn {
+    background: transparent;
+    border: none;
+    color: var(--danger);
+    cursor: pointer;
+    font-weight: 800;
+}
+
+/* Gantt Chart */
+.results-area {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.gantt-algo-row {
+    margin-bottom: 1.5rem;
+    padding: 0.75rem 1.25rem;
+    background: white;
+    border: 1px solid var(--glass-border);
+    border-radius: 0.5rem;
+}
+
+.gantt-chart-container {
+    overflow-x: auto;
+    padding-bottom: 0.75rem;
+}
+
+.gantt-chart {
+    display: flex;
+    height: 30px;
+    min-width: 100%;
+    border: 1px solid var(--glass-border);
+    background: #fcfcfc;
+}
+
+.gantt-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: white;
+    position: relative;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    gap: 2px;
+}
+
+.block-duration {
+    font-size: 0.55rem;
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+.gantt-block::after {
+    content: attr(data-time);
+    position: absolute;
+    bottom: -15px;
+    right: 0;
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+}
+
+.comparison-placeholder {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    border: 2px dashed var(--glass-border);
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 1rem;
+    background: var(--primary-blue);
+    color: white;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--glass-border);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.stat-value {
+    color: var(--primary-blue);
+    font-weight: 700;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+    .main-grid { grid-template-columns: 1fr; }
+}

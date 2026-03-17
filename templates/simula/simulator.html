@@ -1,0 +1,405 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIM-OS Suite - Simulador de Sistemas Operacionais</title>
+    <meta name="description" content="Suíte comparativa de simuladores de SO: CPU, Memória, Disco e Deadlocks.">
+    <link rel="stylesheet" href="{% static 'simula/css/style.css' %}">
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Sidebar de Navegação da Suíte -->
+        <nav class="sidebar">
+            <div class="logo"><span>SIM-OS</span> Suite</div>
+            <ul>
+                <li class="active" data-module="cpu">
+                    <a href="#cpu">
+                        <span class="icon">💻</span>
+                        <span>Escalonador CPU</span>
+                    </a>
+                </li>
+                <li data-module="memory">
+                    <a href="#memory">
+                        <span class="icon">🧠</span>
+                        <span>Gestão de Memória</span>
+                    </a>
+                </li>
+                <li data-module="disk">
+                    <a href="#disk">
+                        <span class="icon">💿</span>
+                        <span>Escalonador Disco</span>
+                    </a>
+                </li>
+                <li data-module="deadlock">
+                    <a href="#deadlock">
+                        <span class="icon">🔒</span>
+                        <span>Prevenção Deadlock</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Área de Conteúdo Principal -->
+        <main class="main-content">
+            <!-- Módulo CPU (Ativo por padrão) -->
+            <div id="cpu-module" class="module-section active">
+                <header>
+                    <h1>CPU Scheduler Simulator</h1>
+                    <p class="subtitle">Análise Comparativa de Algoritmos em Tempo Real</p>
+                </header>
+
+                <div class="main-grid">
+                    <!-- Configurações do Escalonador -->
+                    <aside class="control-panel">
+                        <section class="card">
+                            <h2>Configurações</h2>
+                            <div class="form-group">
+                                <label for="quantum">Quantum (Round Robin)</label>
+                                <input type="number" id="quantum" value="2" min="1">
+                            </div>
+                            <button id="run-btn" class="btn btn-primary">Simular Comparação</button>
+                        </section>
+
+                        <section class="card" style="margin-top: 2rem;">
+                            <h2>Importar do Sistema (Linux)</h2>
+                            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+                                Capture processos reais do seu computador.
+                            </p>
+                            <textarea id="import-area" placeholder="Cole o output do terminal aqui..." style="display: none;"></textarea>
+                            <button id="capture-real-btn" class="btn btn-primary" style="background: var(--success);">Capturar Processos Reais</button>
+                            <button id="import-btn" class="btn btn-outline" style="margin-top: 0.5rem;">Importação Manual (Texto)</button>
+                        </section>
+
+                        <section class="card" style="margin-top: 2rem;">
+                            <h2>Adicionar Manual</h2>
+                            <div class="form-group">
+                                <label for="arrival-time">Tempo de Chegada</label>
+                                <input type="number" id="arrival-time" value="0" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="burst-time">Burst Time (Execução)</label>
+                                <input type="number" id="burst-time" value="5" min="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="priority">Prioridade (Menor = +Urgente)</label>
+                                <input type="number" id="priority" value="1" min="1">
+                            </div>
+                            <button id="add-process-btn" class="btn btn-outline">Adicionar à Lista</button>
+
+                            <div class="process-list" id="process-list">
+                                <!-- Process items will be added here -->
+                            </div>
+                        </section>
+                    </aside>
+
+                    <!-- Visualização dos Resultados -->
+                    <div class="results-area">
+                        <section class="card">
+                            <h2>Gráficos de Gantt Comparativos</h2>
+                            <div id="gantt-container-all">
+                                <div class="comparison-placeholder">Adicione processos e clique em "Simular Comparação".</div>
+                            </div>
+                        </section>
+
+                        <section class="card">
+                            <h2>Tabela de Métricas Médias</h2>
+                            <div class="table-container">
+                                <table id="comparison-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Algoritmo</th>
+                                            <th>T. Médio de Espera</th>
+                                            <th>T. Médio de Turnaround</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Médias geradas via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Módulo de Memória -->
+            <div id="memory-module" class="module-section" style="display: none;">
+                <header>
+                    <h1>Gestão de Memória</h1>
+                    <p class="subtitle">Simulação de Alocação de Espaço em RAM</p>
+                </header>
+
+                <div class="main-grid">
+                    <!-- Painel de Controle de Memória -->
+                    <aside class="control-panel">
+                        <section class="card">
+                            <h2>Configuração da RAM</h2>
+                            <div class="form-group">
+                                <label for="ram-size">Tamanho Total da RAM (MB)</label>
+                                <input type="number" id="ram-size" value="1024" min="128">
+                            </div>
+                            <div class="form-group">
+                                <label for="mem-algo">Algoritmo de Alocação</label>
+                                <select id="mem-algo" class="form-select" style="width: 100%; padding: 0.85rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; font-weight: 500;">
+                                    <option value="first-fit">First-Fit</option>
+                                    <option value="best-fit">Best-Fit</option>
+                                    <option value="worst-fit">Worst-Fit</option>
+                                </select>
+                            </div>
+                            <button id="reset-mem-btn" class="btn btn-outline">Resetar Memória</button>
+                        </section>
+
+                        <section class="card" style="margin-top: 2rem;">
+                            <h2>Alocar Processo</h2>
+                            <div class="form-group">
+                                <label for="process-name-mem">Selecionar Processo</label>
+                                <select id="process-name-mem" class="form-select" style="width: 100%; padding: 0.85rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; font-weight: 500;">
+                                    <option value="Windows-System">System (Kernel)</option>
+                                    <option value="Chrome">Google Chrome</option>
+                                    <option value="VS-Code">VS Code IDE</option>
+                                    <option value="IntelliJ">IntelliJ IDEA</option>
+                                    <option value="Docker">Docker Desktop</option>
+                                    <option value="Microsoft-Teams">Teams</option>
+                                    <option value="Slack">Slack</option>
+                                    <option value="Spotify">Spotify</option>
+                                    <option value="MySQL">MySQL Server</option>
+                                    <option value="Nginx">Nginx</option>
+                                    <option value="PyCharm">PyCharm</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="process-size">Tamanho (MB)</label>
+                                <input type="number" id="process-size" value="100" min="1">
+                            </div>
+                            <button id="alloc-btn" class="btn btn-primary">Alocar na RAM</button>
+                        </section>
+
+                        <section class="card" style="margin-top: 2rem;">
+                            <h2>Processos Ativos</h2>
+                            <div class="process-list" id="mem-process-list">
+                                <!-- Processos na RAM aparecerão aqui -->
+                            </div>
+                        </section>
+                    </aside>
+
+                    <!-- Mapa de Memória -->
+                    <div class="results-area">
+                        <section class="card">
+                            <h2>Mapa Visual da Memória (RAM)</h2>
+                            <div class="memory-container">
+                                <div id="memory-bar" class="memory-bar">
+                                    <!-- Blocos de RAM serão gerados aqui -->
+                                </div>
+                                <div class="memory-labels">
+                                    <span>0 MB</span>
+                                    <span id="label-total-ram">1024 MB</span>
+                                </div>
+                            </div>
+                            
+                            <div class="memory-stats" style="margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div class="stat-card">
+                                    <span class="label">Em Uso</span>
+                                    <span id="mem-used" class="value">0 MB</span>
+                                </div>
+                                <div class="stat-card">
+                                    <span class="label">Livre</span>
+                                    <span id="mem-free" class="value">1024 MB</span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="card">
+                            <h2>Log de Eventos</h2>
+                            <div id="mem-log" class="log-container" style="max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 0.8rem; color: var(--text-muted);">
+                                <div>> Sistema de Memória Iniciado.</div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Módulo de Disco -->
+            <div id="disk-module" class="module-section" style="display: none;">
+                <header>
+                    <h1>Escalonador de Disco</h1>
+                    <p class="subtitle">Simulação de Movimento da Agulha (I/O Scheduling)</p>
+                </header>
+
+                <div class="main-grid">
+                    <!-- Painel de Controle de Disco -->
+                    <aside class="control-panel">
+                        <section class="card">
+                            <h2>Configuração do Disco</h2>
+                            <div class="form-group">
+                                <label for="disk-size">Total de Trilhas (Cilindros)</label>
+                                <input type="number" id="disk-size" value="200" min="50">
+                            </div>
+                            <div class="form-group">
+                                <label for="initial-pos">Posição Inicial da Agulha</label>
+                                <input type="number" id="initial-pos" value="50" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="disk-algo">Algoritmo de Escalonamento</label>
+                                <select id="disk-algo" class="form-select" style="width: 100%; padding: 0.85rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; font-weight: 500;">
+                                    <option value="fcfs">FCFS (Padrão)</option>
+                                    <option value="sstf">SSTF (Mais Curto Primeiro)</option>
+                                    <option value="scan">SCAN (Elevador)</option>
+                                    <option value="c-scan">C-SCAN (Circular)</option>
+                                    <option value="look">LOOK</option>
+                                    <option value="c-look">C-LOOK</option>
+                                </select>
+                            </div>
+                            <button id="run-disk-btn" class="btn btn-primary">Simular Movimento</button>
+                        </section>
+
+                        <section class="card" style="margin-top: 2rem;">
+                            <h2>Fila de Requisições</h2>
+                            <div class="form-group">
+                                <label for="request-track">Nova Requisição (Trilha #)</label>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <input type="number" id="request-track" value="100" min="0">
+                                    <button id="add-request-btn" class="btn btn-outline" style="padding: 0.5rem 1rem; width: auto;">+</button>
+                                </div>
+                            </div>
+                            <div id="disk-requests-list" class="process-list" style="display: flex; flex-wrap: wrap; gap: 0.5rem; flex-direction: row;">
+                                <!-- Requisições em espera -->
+                            </div>
+                            <button id="clear-disk-btn" class="btn btn-outline" style="margin-top: 1rem; font-size: 0.7rem; padding: 0.5rem;">Limpar Fila</button>
+                        </section>
+                    </aside>
+
+                    <!-- Visualização do Disco -->
+                    <div class="results-area">
+                        <section class="card">
+                            <h2>Trajetória da Agulha (Gráfico de Busca)</h2>
+                            <div class="disk-viz-container" style="background: #f8fafc; border-radius: 1rem; padding: 1rem; position: relative;">
+                                <canvas id="disk-canvas" width="800" height="350" style="width: 100%; height: 350px; background: white; border-radius: 0.5rem;"></canvas>
+                                <div class="disk-labels" style="display: flex; justify-content: space-between; margin-top: 5px; font-weight: 700; color: var(--text-muted); font-size: 0.8rem;">
+                                    <span>Trilha 0</span>
+                                    <span id="label-max-track">Trilha 199</span>
+                                </div>
+                            </div>
+                            
+                            <div class="memory-stats" style="margin-top: 2rem;">
+                                <div class="stat-card" style="text-align: center;">
+                                    <span class="label">Total de Movimento (Cilindros Percorridos)</span>
+                                    <span id="total-seek-time" class="value" style="font-size: 2rem;">0</span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="card">
+                            <h2>Ordem de Atendimento</h2>
+                            <div id="disk-order" class="log-container" style="font-family: monospace; font-size: 0.9rem;">
+                                <i>Aguardando simulação...</i>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <!-- Módulo de Deadlock -->
+            <div id="deadlock-module" class="module-section" style="display: none;">
+                <header>
+                    <h1>Prevenção de Deadlock</h1>
+                    <p class="subtitle">Algoritmo do Banqueiro (Banker's Algorithm)</p>
+                </header>
+
+                <div class="main-grid">
+                    <!-- Configurações e Entrada de Dados -->
+                    <aside class="control-panel">
+                        <section class="card">
+                            <h2>Configuração de Recursos</h2>
+                            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+                                Defina quantos tipos de recursos (ex: RAM, GPU, Impressora) existem no sistema.
+                            </p>
+                            <div class="form-group">
+                                <label for="resource-count">Tipos de Recursos (A, B, C...)</label>
+                                <input type="number" id="resource-count" value="3" min="1" max="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="process-count-dl">Quantidade de Processos</label>
+                                <input type="number" id="process-count-dl" value="5" min="1" max="8">
+                            </div>
+                            <button id="setup-banker-btn" class="btn btn-outline" style="background: var(--primary-light);">Gerar Tabelas</button>
+                        </section>
+
+                        <section class="card" style="margin-top: 2rem;">
+                            <h2>Disponibilidade Atual</h2>
+                            <div id="available-inputs" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <!-- Gerado via JS -->
+                            </div>
+                        </section>
+
+                        <section class="card" style="margin-top: 2rem;">
+                            <button id="check-safety-btn" class="btn btn-primary">Verificar Estado Seguro</button>
+                            <button id="reset-dl-btn" class="btn btn-outline" style="margin-top: 0.5rem;">Limpar Tudo</button>
+                        </section>
+                    </aside>
+
+                    <!-- Tabelas de Alocação e Necessidade -->
+                    <div class="results-area">
+                        <section class="card">
+                            <h2>Matrizes de Alocação e Máximo</h2>
+                            <div class="table-container" style="padding: 0.5rem;">
+                                <table id="banker-table" style="font-size: 0.85rem;">
+                                    <thead>
+                                        <tr id="banker-header">
+                                            <!-- Gerado via JS -->
+                                        </tr>
+                                    </thead>
+                                    <tbody id="banker-body">
+                                        <!-- Gerado via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <section class="card">
+                            <h2>Resultado da Análise</h2>
+                            <div id="safety-result" class="stat-card" style="text-align: center; min-height: 100px; display: flex; flex-direction: column; justify-content: center;">
+                                <span class="label">Status do Sistema</span>
+                                <div id="status-text" style="font-size: 1.5rem; font-weight: 800; margin-top: 0.5rem;">Aguardando Dados...</div>
+                            </div>
+                            
+                            <div id="safety-sequence-container" style="margin-top: 1.5rem; display: none;">
+                                <span class="label">Sequência Segura:</span>
+                                <div id="safety-sequence" class="log-container" style="background: var(--primary-light); color: var(--primary-dark); padding: 1rem; border-radius: 0.5rem; font-weight: 800; text-align: center; border: 2px dashed var(--primary);">
+                                    <!-- Sequência -->
+                                </div>
+                            </div>
+
+                            <div id="banker-log" class="log-container" style="margin-top: 1rem; max-height: 150px; overflow-y: auto;">
+                                <!-- Logs de execução -->
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{% static 'simula/js/script.js' %}"></script>
+    <script src="{% static 'simula/js/memory.js' %}"></script>
+    <script src="{% static 'simula/js/disk.js' %}"></script>
+    <script src="{% static 'simula/js/deadlock.js' %}"></script>
+    <script>
+        // Lógica simples para trocar de módulos na Suite
+        document.querySelectorAll('.sidebar li').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetModule = item.getAttribute('data-module');
+                
+                // Atualiza Sidebar
+                document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
+                item.classList.add('active');
+                
+                // Atualiza Conteúdo
+                document.querySelectorAll('.module-section').forEach(sec => sec.style.display = 'none');
+                const activeSection = document.getElementById(`${targetModule}-module`);
+                if(activeSection) activeSection.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
