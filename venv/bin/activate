@@ -28,7 +28,10 @@ deactivate () {
     fi
 
     unset VIRTUAL_ENV
+<<<<<<< HEAD
     unset VIRTUAL_ENV_PROMPT
+=======
+>>>>>>> edcce92 (ajuste github)
     if [ ! "${1:-}" = "nondestructive" ] ; then
     # Self destruct!
         unset -f deactivate
@@ -38,11 +41,19 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
+<<<<<<< HEAD
 VIRTUAL_ENV=/mnt/usr.L01/fran/Documents/desenvolvimento/simulador_ligainj/venv
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
 PATH="$VIRTUAL_ENV/"bin":$PATH"
+=======
+VIRTUAL_ENV="/Users/usuario/ufbra/simulador_ligainj/venv"
+export VIRTUAL_ENV
+
+_OLD_VIRTUAL_PATH="$PATH"
+PATH="$VIRTUAL_ENV/bin:$PATH"
+>>>>>>> edcce92 (ajuste github)
 export PATH
 
 # unset PYTHONHOME if set
@@ -55,10 +66,15 @@ fi
 
 if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ] ; then
     _OLD_VIRTUAL_PS1="${PS1:-}"
+<<<<<<< HEAD
     PS1='(venv) '"${PS1:-}"
     export PS1
     VIRTUAL_ENV_PROMPT='(venv) '
     export VIRTUAL_ENV_PROMPT
+=======
+    PS1="(venv) ${PS1:-}"
+    export PS1
+>>>>>>> edcce92 (ajuste github)
 fi
 
 # This should detect bash and zsh, which have a hash command that must

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #!/mnt/usr.L01/fran/Documents/desenvolvimento/simulador_ligainj/venv/bin/python3
+=======
+#!/Users/usuario/ufbra/simulador_ligainj/venv/bin/python3
+>>>>>>> edcce92 (ajuste github)
 # -*- coding: utf-8 -*-
 import re
 import sys

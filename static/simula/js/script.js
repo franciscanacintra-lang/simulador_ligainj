@@ -71,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // SYSTEM IMPORT LOGIC
     document.getElementById('import-btn').addEventListener('click', () => {
+<<<<<<< HEAD
         const input = document.getElementById('import-area').value;
         const lines = input.trim().split('\n').slice(1); // Ignora o cabeçalho
 
@@ -83,6 +84,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Converter tempo de CPU em segundos (simulando Burst Time)
                 const timeParts = timeStr.split(':').reverse();
                 let burstSeconds = 0;
+=======
+        const area = document.getElementById('import-area');
+        const btn = document.getElementById('import-btn');
+
+        if (area.style.display === 'none') {
+            area.style.display = 'block';
+            btn.innerText = 'Confirmar Importação';
+            btn.style.background = 'var(--primary)';
+            btn.style.color = 'white';
+            return;
+        }
+
+        const input = area.value;
+        if (!input.trim()) {
+            area.style.display = 'none';
+            btn.innerText = 'Importação Manual (Texto)';
+            btn.style.background = '';
+            btn.style.color = '';
+            return;
+        }
+
+        const lines = input.trim().split('\n');
+        
+        lines.forEach((line) => {
+            // Ignora cabeçalhos comuns ou linhas vazias
+            if (line.includes('COMM') || line.includes('TIME') || !line.trim()) return;
+
+            const parts = line.trim().split(/\s+/);
+            if (parts.length >= 2) {
+                const name = parts[0];
+                const timeStr = parts[parts.length - 1]; // Pega o último elemento como tempo
+                
+                // Converter tempo (HH:MM:SS ou MM:SS.CC)
+                const cleanTime = timeStr.split('.')[0]; // Remove centésimos se houver
+                const timeParts = cleanTime.split(':').reverse();
+                let burstSeconds = 0;
+                
+>>>>>>> edcce92 (ajuste github)
                 if (timeParts[0]) burstSeconds += parseInt(timeParts[0]); // seg
                 if (timeParts[1]) burstSeconds += parseInt(timeParts[1]) * 60; // min
                 if (timeParts[2]) burstSeconds += parseInt(timeParts[2]) * 3600; // horas
@@ -99,8 +138,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+<<<<<<< HEAD
         updateProcessList();
         document.getElementById('import-area').value = '';
+=======
+
+        updateProcessList();
+        area.value = '';
+        area.style.display = 'none';
+        btn.innerText = 'Importação Manual (Texto)';
+        btn.style.background = '';
+        btn.style.color = '';
+        alert('Processos importados com sucesso!');
+>>>>>>> edcce92 (ajuste github)
     });
 
     // CAPTURE REAL SYSTEM PROCESSES VIA DJANGO API
@@ -118,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.output) {
                 const lines = data.output.trim().split('\n').filter(line => !line.includes('COMMAND'));
                 
+<<<<<<< HEAD
                 lines.forEach((line, index) => {
                     const parts = line.trim().split(/\s+/);
                     if (parts.length >= 2) {
@@ -131,19 +182,66 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (timeParts[2]) burstSeconds += parseInt(timeParts[2]) * 3600;
 
                         if (burstSeconds > 0) {
+=======
+                // Embaralhar e pegar apenas 5 processos para não sobrecarregar o simulador
+                const shuffled = lines.sort(() => 0.5 - Math.random());
+                const selectedLines = shuffled.slice(0, 5);
+                
+                selectedLines.forEach((line, index) => {
+                    if (data.os === 'Windows') {
+                        // Lógica para parsear CSV do Windows tasklist
+                        const parts = line.split('","');
+                        if (parts.length >= 1) {
+                            const name = parts[0].replace(/"/g, '');
+>>>>>>> edcce92 (ajuste github)
                             processes.push({
                                 id: `P${pidCounter++}`,
                                 command: name,
                                 arrival: Math.floor(Math.random() * 8),
+<<<<<<< HEAD
                                 burst: Math.min(burstSeconds, 20),
+=======
+                                burst: Math.floor(Math.random() * 10) + 1, // Simulando tempo para Windows
+>>>>>>> edcce92 (ajuste github)
                                 priority: Math.floor(Math.random() * 5) + 1,
                                 color: generateColor()
                             });
                         }
+<<<<<<< HEAD
                     }
                 });
                 updateProcessList();
                 alert('Processos capturados diretamente do seu Linux!');
+=======
+                    } else {
+                        // Lógica Unix (Mac/Linux)
+                        const parts = line.trim().split(/\s+/);
+                        if (parts.length >= 2) {
+                            const name = parts[0];
+                            const timeStr = parts[1];
+                            
+                            const timeParts = timeStr.split(':').reverse();
+                            let burstSeconds = 0;
+                            if (timeParts[0]) burstSeconds += parseInt(timeParts[0]);
+                            if (timeParts[1]) burstSeconds += parseInt(timeParts[1]) * 60;
+                            if (timeParts[2]) burstSeconds += parseInt(timeParts[2]) * 3600;
+
+                            if (burstSeconds > 0) {
+                                processes.push({
+                                    id: `P${pidCounter++}`,
+                                    command: name,
+                                    arrival: Math.floor(Math.random() * 8),
+                                    burst: Math.min(burstSeconds, 20),
+                                    priority: Math.floor(Math.random() * 5) + 1,
+                                    color: generateColor()
+                                });
+                            }
+                        }
+                    }
+                });
+                updateProcessList();
+                alert(`Processos capturados do seu sistema (${data.os || 'OS Unknown'})!`);
+>>>>>>> edcce92 (ajuste github)
             }
         } catch (error) {
             console.error('Erro ao capturar processos:', error);
